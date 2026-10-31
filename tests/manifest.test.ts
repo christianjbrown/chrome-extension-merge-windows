@@ -11,4 +11,9 @@ describe("manifest", () => {
   it("asks for nothing else", () => {
     expect(manifest.permissions).toEqual(["tabGroups"]);
   });
+
+  // Clicking the button is the only way in, on purpose.
+  it("has no keyboard shortcut", () => {
+    expect(manifest).not.toHaveProperty("commands");
+  });
 });
