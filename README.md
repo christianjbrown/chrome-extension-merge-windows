@@ -49,6 +49,10 @@ Then hit the reload arrow on the Christian's Merge Windows card in `chrome://ext
 - **A red `!` on the button** means something went wrong. Hover over it and the tooltip says what.
 - **It asks for one permission, `tabGroups`,** so it can move groups whole. It never reads your pages, URLs or tab titles.
 
+## No tracking 🔒
+
+No analytics, no tracking, no ads, no accounts, and nothing phoning home. It never talks to the internet at all, so nothing about your windows or tabs leaves your machine.
+
 ## Hacking on it 🛠️
 
 It's TypeScript, bundled with esbuild, tested with Vitest.
