@@ -10,7 +10,6 @@ One button in your Chrome toolbar. Click it and every other Chrome window folds 
 - **Pinned tabs stay pinned**, and line up with the pinned tabs you already had.
 - **Incognito stays incognito.** Click in an ordinary window and the incognito ones are left alone, and the other way round. Chrome won't mix them anyway.
 - **Empty windows vanish** once their last tab has moved.
-- **Alt+Shift+M** does the same as clicking, for keyboard people.
 
 ## Install it 🔧
 
@@ -48,7 +47,6 @@ Then hit the reload arrow on the Christian's Merge Windows card in `chrome://ext
 - **Incognito windows** only get merged if you've turned on **Allow in Incognito** for the extension in `chrome://extensions`, and then only into another incognito window.
 - **App windows** (installed web apps running in their own window) and DevTools are left alone. They aren't really browser windows.
 - **A red `!` on the button** means something went wrong. Hover over it and the tooltip says what.
-- **Want a different shortcut?** Change it at `chrome://extensions/shortcuts`.
 - **It asks for one permission, `tabGroups`,** so it can move groups whole. It never reads your pages, URLs or tab titles.
 
 ## Hacking on it 🛠️
