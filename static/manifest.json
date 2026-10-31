@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Christian's Merge Windows",
+  "version": "1.0.0",
+  "description": "One click pulls the tabs from every other window, minimised and popup ones too, into the window you are in.",
+  "minimum_chrome_version": "126",
+  "permissions": ["tabGroups"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Merge every window into this one",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Alt+Shift+M" },
+      "description": "Merge every window into this one"
+    }
+  }
+}
