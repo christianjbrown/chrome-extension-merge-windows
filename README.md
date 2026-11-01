@@ -2,6 +2,8 @@
 
 One button in your Chrome toolbar. Click it and every other Chrome window folds into the one you're looking at. Minimised ones, popups, that window you forgot about on the other desktop: all of it. No options page, no settings, no menu. Click, done.
 
+![Three Chrome windows, then one window holding all of their tabs, with the Holiday tab group intact](docs/screenshot.png)
+
 ## What you get 🧲
 
 - **Every window**, including minimised ones and popup windows (the little chromeless ones that sign-in flows and web apps love to spawn).
