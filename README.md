@@ -55,7 +55,7 @@ Then hit the reload arrow on the Christian's Merge Windows card in `chrome://ext
 
 No analytics, no tracking, no ads, no accounts, and nothing phoning home. It never talks to the internet at all, so nothing about your windows or tabs leaves your machine.
 
-## Hacking on it 🛠️
+## Development 🛠️
 
 It's TypeScript, bundled with esbuild, tested with Vitest.
 
