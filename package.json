@@ -2,6 +2,7 @@
   "name": "chrome-extension-merge-windows",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "description": "Chrome extension: one click pulls every window, minimised and popup ones too, into the one you are in.",
   "type": "module",
   "scripts": {
