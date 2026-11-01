@@ -1,4 +1,4 @@
-# Merge Windows 🪟
+# Merge Windows Chrome Extension 🪟
 
 One button in your Chrome toolbar. Click it and every other Chrome window folds into the one you're looking at. Minimised ones, popups, that window you forgot about on the other desktop: all of it. No options page, no settings, no menu. Click, done.
 
