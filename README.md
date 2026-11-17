@@ -49,8 +49,8 @@ Then hit the reload arrow on the Christian's Merge Windows card in `chrome://ext
 - **Incognito windows** only get merged if you've turned on **Allow in Incognito** for the extension in `chrome://extensions`, and then only into another incognito window.
 - **App windows** (installed web apps running in their own window) and DevTools are left alone. They aren't really browser windows.
 - **A red `!` on the button** means something went wrong. Hover over it and the tooltip says what.
-- **It asks for two permissions:** `tabGroups` so it can move groups whole, and `offscreen` to check whether Chrome is light or dark. It never reads your pages, URLs or tab titles.
-- **The button dresses for the occasion.** Almost black on a light toolbar, almost white on a dark one, and it swaps the moment Chrome does. 🌗
+- **It asks for five permissions:** `tabGroups` so it can move groups whole, `offscreen` to check whether your computer is light or dark, `activeTab` and `scripting` to read the light or dark setting from the tab you click the button in (only then, and nothing else in it), and `storage` to remember which one Chrome is in. It never reads your pages, URLs or tab titles.
+- **The button dresses for the occasion.** Almost black on a light toolbar, almost white on a dark one, It follows your computer by itself. If you've set Chrome to Light or Dark separately, it catches on the first time you click it, and remembers. 🌗
 
 ## No tracking 🔒
 
@@ -71,6 +71,7 @@ How it fits together, all in `src`:
 
 - **`main.ts`** wires the pieces to Chrome. Nothing else touches `chrome` directly.
 - **`scheme-document.ts`, `scheme-reporter.ts` and `scheme-listener.ts`** keep the button's colour in step with Chrome: a hidden offscreen document checks light or dark once a second and the service worker swaps the icon.
+- **`scheme-state.ts`, `scheme-store.ts`, `toolbar-scheme.ts`, `tab-scheme.ts` and `click-scheme.ts`** sort out which report to believe: the device's, or the one a clicked tab gives for Chrome's own setting, which wins and is kept in `chrome.storage.local`.
 - **`merge-controller.ts`** handles a click: merge, then clear the badge or show what went wrong.
 - **`window-merger.ts`** fetches every normal and popup window, picks out the ones to merge, and runs the plan.
 - **`merge-planner.ts`** works out the moves: runs of loose tabs in one go, groups whole, then re-pin the pinned ones.

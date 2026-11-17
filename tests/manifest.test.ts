@@ -7,15 +7,31 @@ describe("manifest", () => {
     expect(manifest.permissions).toContain("tabGroups");
   });
 
-  // offscreen opens the hidden document that reads Chrome's colour scheme for
-  // the toolbar icon.
-  it("asks for offscreen", () => {
-    expect(manifest.permissions).toContain("offscreen");
+  // offscreen opens the hidden document that reads the device's colour scheme
+  // for the toolbar icon. activeTab and scripting read the colour scheme Chrome
+  // itself is in from the tab the button is clicked in, and nothing else there.
+  // storage remembers that scheme.
+  it("asks for offscreen, activeTab, scripting and storage", () => {
+    expect(manifest.permissions).toEqual(
+      expect.arrayContaining([
+        "offscreen",
+        "activeTab",
+        "scripting",
+        "storage",
+      ]),
+    );
   });
 
-  // Nothing here reads a page, a URL or a title, so nothing more is asked for.
+  // Nothing here reads a URL or a title, so no host permissions and nothing more.
   it("asks for nothing else", () => {
-    expect(manifest.permissions).toEqual(["tabGroups", "offscreen"]);
+    expect(manifest.permissions).toEqual([
+      "tabGroups",
+      "offscreen",
+      "activeTab",
+      "scripting",
+      "storage",
+    ]);
+    expect(manifest).not.toHaveProperty("host_permissions");
   });
 
   it("starts with the icon for a dark toolbar until the scheme is known", () => {
