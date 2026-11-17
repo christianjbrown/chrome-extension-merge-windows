@@ -48,6 +48,12 @@ Move the tabs from all other Chrome windows into the current window.
 Reads the tab groups in the other windows and recreates them, with their name, colour and collapsed state, in the window the tabs move to.
 ```
 
+**offscreen**
+
+```text
+Opens a hidden document that reads whether Chrome is in its light or dark colour scheme, so the toolbar icon can be drawn to match. A service worker cannot read that itself. The document reads nothing else.
+```
+
 **Remote code:** No, I am not using remote code.
 
 **Data usage:** tick none of the data types, then tick all three certifications.

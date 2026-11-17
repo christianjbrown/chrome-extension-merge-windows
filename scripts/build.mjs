@@ -1,4 +1,4 @@
-// Bundles the service worker and copies the static files into dist/, which is
+// Bundles the service worker, the offscreen document and copies the static files into dist/, which is
 // the folder Chrome loads with "Load unpacked".
 import { build } from "esbuild";
 import { cp, mkdir, rm } from "node:fs/promises";
@@ -8,7 +8,10 @@ const outdir = "dist";
 await rm(outdir, { recursive: true, force: true });
 await mkdir(outdir, { recursive: true });
 await build({
-  entryPoints: { background: "src/main.ts" },
+  entryPoints: {
+    background: "src/main.ts",
+    offscreen: "src/offscreen-main.ts",
+  },
   outdir,
   bundle: true,
   format: "iife",
