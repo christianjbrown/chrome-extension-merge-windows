@@ -1,9 +1,25 @@
 // Drives the service worker's wiring through a fake chrome, end to end.
 type Listener = (...args: unknown[]) => unknown;
 
+function chromeEvent() {
+  const listeners: Listener[] = [];
+  return {
+    addListener: (listener: Listener) => listeners.push(listener),
+    fire: (...args: unknown[]) =>
+      listeners.map((listener) => listener(...args)),
+  };
+}
+
 function fakeChrome() {
   const listeners: Listener[] = [];
   return {
+    runtime: {
+      id: "ext",
+      onMessage: chromeEvent(),
+      onStartup: chromeEvent(),
+      getContexts: vi.fn().mockResolvedValue([]),
+    },
+    offscreen: { createDocument: vi.fn().mockResolvedValue(undefined) },
     action: {
       onClicked: {
         addListener: (listener: Listener) => listeners.push(listener),
@@ -14,6 +30,7 @@ function fakeChrome() {
       setBadgeText: vi.fn().mockResolvedValue(undefined),
       setBadgeBackgroundColor: vi.fn().mockResolvedValue(undefined),
       setTitle: vi.fn().mockResolvedValue(undefined),
+      setIcon: vi.fn().mockResolvedValue(undefined),
     },
     windows: {
       getAll: vi.fn().mockResolvedValue([
@@ -89,5 +106,53 @@ describe("service worker", () => {
       });
     });
     expect(chrome.action.setBadgeText).toHaveBeenCalledWith({ text: "!" });
+  });
+
+  it("opens the colour scheme watcher when the service worker starts", async () => {
+    const chrome = await load();
+
+    await vi.waitFor(() => {
+      expect(chrome.offscreen.createDocument).toHaveBeenCalledWith(
+        expect.objectContaining({ url: "offscreen.html" }),
+      );
+    });
+  });
+
+  it("opens the colour scheme watcher only once when Chrome starts", async () => {
+    const chrome = await load();
+
+    chrome.runtime.onStartup.fire();
+
+    await vi.waitFor(() => {
+      expect(chrome.offscreen.createDocument).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("repaints the button when the colour scheme changes", async () => {
+    const chrome = await load();
+
+    chrome.runtime.onMessage.fire(
+      { target: "background", type: "scheme", scheme: "light" },
+      { id: "ext" },
+    );
+
+    await vi.waitFor(() => {
+      expect(chrome.action.setIcon).toHaveBeenCalledWith({
+        path: expect.objectContaining({
+          "16": "icons/on-light/icon-16.png",
+        }) as unknown,
+      });
+    });
+  });
+
+  it("ignores a colour scheme from outside the extension", async () => {
+    const chrome = await load();
+
+    chrome.runtime.onMessage.fire(
+      { target: "background", type: "scheme", scheme: "light" },
+      { id: "intruder" },
+    );
+
+    expect(chrome.action.setIcon).not.toHaveBeenCalled();
   });
 });
