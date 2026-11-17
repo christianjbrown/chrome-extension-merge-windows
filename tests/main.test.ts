@@ -20,6 +20,13 @@ function fakeChrome() {
       getContexts: vi.fn().mockResolvedValue([]),
     },
     offscreen: { createDocument: vi.fn().mockResolvedValue(undefined) },
+    storage: {
+      local: {
+        get: vi.fn().mockResolvedValue({}),
+        set: vi.fn().mockResolvedValue(undefined),
+      },
+    },
+    scripting: { executeScript: vi.fn().mockResolvedValue([]) },
     action: {
       onClicked: {
         addListener: (listener: Listener) => listeners.push(listener),
@@ -142,6 +149,37 @@ describe("service worker", () => {
           "16": "icons/on-light/icon-16.png",
         }) as unknown,
       });
+    });
+  });
+
+  it("learns Chrome's own colour scheme from the tab that was clicked", async () => {
+    const chrome = await load();
+    chrome.scripting.executeScript.mockResolvedValue([{ result: false }]);
+
+    chrome.action.onClicked.fire({ id: 10, windowId: 1 });
+
+    await vi.waitFor(() => {
+      expect(chrome.storage.local.set).toHaveBeenCalledWith({
+        toolbarScheme: { device: "dark", chrome: "light" },
+      });
+    });
+    expect(chrome.action.setIcon).toHaveBeenCalledWith({
+      path: expect.objectContaining({
+        "16": "icons/on-light/icon-16.png",
+      }) as unknown,
+    });
+  });
+
+  it("still merges when the tab's colour scheme cannot be read", async () => {
+    const chrome = await load();
+    chrome.scripting.executeScript.mockRejectedValue(
+      new Error("Cannot access"),
+    );
+
+    chrome.action.onClicked.fire({ id: 10, windowId: 1 });
+
+    await vi.waitFor(() => {
+      expect(chrome.tabGroups.move).toHaveBeenCalled();
     });
   });
 

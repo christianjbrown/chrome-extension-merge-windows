@@ -3,27 +3,27 @@ import { SchemeListener } from "../src/scheme-listener";
 const message = { target: "background", type: "scheme", scheme: "dark" };
 
 describe("SchemeListener", () => {
-  it("shows the reported scheme when the extension itself sent it", () => {
-    const icon = { show: vi.fn().mockResolvedValue(undefined) };
+  it("passes on the reported scheme when the extension itself sent it", () => {
+    const device = { deviceIs: vi.fn().mockResolvedValue(undefined) };
 
-    new SchemeListener(icon, "ext").handle(message, { id: "ext" });
+    new SchemeListener(device, "ext").handle(message, { id: "ext" });
 
-    expect(icon.show).toHaveBeenCalledExactlyOnceWith("dark");
+    expect(device.deviceIs).toHaveBeenCalledExactlyOnceWith("dark");
   });
 
   it("ignores a message from another sender", () => {
-    const icon = { show: vi.fn().mockResolvedValue(undefined) };
+    const device = { deviceIs: vi.fn().mockResolvedValue(undefined) };
 
-    new SchemeListener(icon, "ext").handle(message, { id: "intruder" });
+    new SchemeListener(device, "ext").handle(message, { id: "intruder" });
 
-    expect(icon.show).not.toHaveBeenCalled();
+    expect(device.deviceIs).not.toHaveBeenCalled();
   });
 
   it("ignores a message of the wrong shape", () => {
-    const icon = { show: vi.fn().mockResolvedValue(undefined) };
+    const device = { deviceIs: vi.fn().mockResolvedValue(undefined) };
 
-    new SchemeListener(icon, "ext").handle({ type: "scheme" }, { id: "ext" });
+    new SchemeListener(device, "ext").handle({ type: "scheme" }, { id: "ext" });
 
-    expect(icon.show).not.toHaveBeenCalled();
+    expect(device.deviceIs).not.toHaveBeenCalled();
   });
 });

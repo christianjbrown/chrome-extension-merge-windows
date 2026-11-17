@@ -1,10 +1,16 @@
 {
   "manifest_version": 3,
   "name": "Christian's Merge Windows",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "One click pulls the tabs from every other window, minimised and popup ones too, into the window you are in.",
   "minimum_chrome_version": "126",
-  "permissions": ["tabGroups", "offscreen"],
+  "permissions": [
+    "tabGroups",
+    "offscreen",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
   "background": {
     "service_worker": "background.js"
   },

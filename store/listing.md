@@ -51,7 +51,25 @@ Reads the tab groups in the other windows and recreates them, with their name, c
 **offscreen**
 
 ```text
-Opens a hidden document that reads whether Chrome is in its light or dark colour scheme, so the toolbar icon can be drawn to match. A service worker cannot read that itself. The document reads nothing else.
+Opens a hidden document that reads whether the device is in its light or dark colour scheme, so the toolbar icon can be drawn to match. A service worker cannot read that itself. The document reads nothing else.
+```
+
+**activeTab**
+
+```text
+Lets the extension into the one tab the user clicks the button in, and only when they click. It is used to read that tab's light or dark setting, which follows Chrome's own, and nothing else in the tab is read.
+```
+
+**scripting**
+
+```text
+Runs one line in the tab the user clicked the button in, to ask whether it is in a light or dark colour scheme. Chrome can be set to Light or Dark separately from the device, and only a page in a tab shows which. Nothing else is read.
+```
+
+**storage**
+
+```text
+Remembers which colour scheme the toolbar is in, so the icon matches it after Chrome restarts. Chrome can be set to Light or Dark separately from the device, and the extension only learns that from the tab the user clicks its button in. Nothing else is stored.
 ```
 
 **Remote code:** No, I am not using remote code.
