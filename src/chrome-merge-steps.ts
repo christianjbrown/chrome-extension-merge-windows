@@ -1,4 +1,5 @@
-import type { MergeStep, MergeSteps } from "./merge-steps";
+// The steps a merge is made of, as chrome.tabs and chrome.tabGroups calls.
+import type { MergeStep } from "./merge-steps";
 
 interface MoveProperties {
   windowId: number;
@@ -20,7 +21,7 @@ export interface GroupMover {
 // Index -1 is Chrome's "at the end".
 const AT_THE_END = -1;
 
-class TabsMove implements MergeStep {
+export class TabsMove implements MergeStep {
   constructor(
     private readonly tabs: TabMover,
     private readonly tabIds: number[],
@@ -33,7 +34,7 @@ class TabsMove implements MergeStep {
 
 // Moving the group rather than its tabs keeps its name, colour and collapsed
 // state. Moving the tabs one by one would leave them ungrouped.
-class GroupMove implements MergeStep {
+export class GroupMove implements MergeStep {
   constructor(
     private readonly groups: GroupMover,
     private readonly groupId: number,
@@ -46,7 +47,7 @@ class GroupMove implements MergeStep {
 
 // A pinned tab arrives unpinned in its new window, so it is pinned again.
 // Chrome then slots it in at the end of the pinned ones.
-class Pin implements MergeStep {
+export class Pin implements MergeStep {
   constructor(
     private readonly tabs: TabPinner,
     private readonly tabIds: number[],
@@ -56,24 +57,5 @@ class Pin implements MergeStep {
     for (const tabId of this.tabIds) {
       await this.tabs.update(tabId, { pinned: true });
     }
-  }
-}
-
-export class ChromeMergeSteps implements MergeSteps {
-  constructor(
-    private readonly tabs: TabMover & TabPinner,
-    private readonly groups: GroupMover,
-  ) {}
-
-  moveTabs(tabIds: number[]): MergeStep {
-    return new TabsMove(this.tabs, tabIds);
-  }
-
-  moveGroup(groupId: number): MergeStep {
-    return new GroupMove(this.groups, groupId);
-  }
-
-  pin(tabIds: number[]): MergeStep {
-    return new Pin(this.tabs, tabIds);
   }
 }

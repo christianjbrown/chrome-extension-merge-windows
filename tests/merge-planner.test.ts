@@ -1,5 +1,5 @@
 import { TabOrderPlanner } from "../src/merge-planner";
-import { RecordingSteps, names } from "./fakes";
+import { names, recordingSteps } from "./fakes";
 
 const tab = (id: number | undefined, groupId = -1, pinned = false) => ({
   id,
@@ -9,7 +9,7 @@ const tab = (id: number | undefined, groupId = -1, pinned = false) => ({
 
 const plan = (...windows: { tabs?: ReturnType<typeof tab>[] }[]) =>
   names(
-    new TabOrderPlanner(new RecordingSteps()).plan(
+    new TabOrderPlanner(recordingSteps()).plan(
       windows.map((window) => ({ incognito: false, ...window })),
     ),
   );

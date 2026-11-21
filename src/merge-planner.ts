@@ -1,5 +1,5 @@
 import type { BrowserTab, BrowserWindow } from "./browser-windows";
-import type { MergeStep, MergeSteps } from "./merge-steps";
+import { STEP_KIND, type MergeStep, type MergeSteps } from "./merge-steps";
 
 export interface MergePlanner {
   plan(windows: BrowserWindow[]): MergeStep[];
@@ -22,7 +22,9 @@ export class TabOrderPlanner implements MergePlanner {
       .flatMap((tab) => (tab.id === undefined ? [] : [tab.id]));
     return [
       ...tabs.flatMap((windowTabs) => this.planWindow(windowTabs)),
-      ...(pinned.length > 0 ? [this.steps.pin(pinned)] : []),
+      ...(pinned.length > 0
+        ? [this.steps.make(STEP_KIND.pin, { tabIds: pinned })]
+        : []),
     ];
   }
 
@@ -34,7 +36,7 @@ export class TabOrderPlanner implements MergePlanner {
     let loose: number[] = [];
     const flush = () => {
       if (loose.length > 0) {
-        steps.push(this.steps.moveTabs(loose));
+        steps.push(this.steps.make(STEP_KIND.moveTabs, { tabIds: loose }));
         loose = [];
       }
     };
@@ -44,7 +46,9 @@ export class TabOrderPlanner implements MergePlanner {
       } else if (!groups.has(tab.groupId)) {
         flush();
         groups.add(tab.groupId);
-        steps.push(this.steps.moveGroup(tab.groupId));
+        steps.push(
+          this.steps.make(STEP_KIND.moveGroup, { groupId: tab.groupId }),
+        );
       }
     }
     flush();
