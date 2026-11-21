@@ -1,7 +1,7 @@
 import type { MergeStep, StepBuilder } from "./merge-steps";
 import type { RunStrategy } from "./run-strategy";
 import { tabIds } from "./tab-ids";
-import { NO_GROUP, type TabRun } from "./tab-runs";
+import { NO_GROUP, type TabRun } from "./run-splitter";
 import type { TabsMoveDetails } from "./tabs-move";
 
 // A run of ungrouped tabs goes across in one move.

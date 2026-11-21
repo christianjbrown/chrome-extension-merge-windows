@@ -16,6 +16,7 @@ import { UNKNOWN_SCHEME } from "./scheme-state";
 import { SchemeStore } from "./scheme-store";
 import { SerialQueue } from "./serial-queue";
 import { TabOrderPlanner } from "./tab-order-planner";
+import { GroupRuns } from "./tab-runs";
 import { TabScheme } from "./tab-scheme";
 import { TabsMoveBuilder } from "./tabs-move";
 import { ToolbarIcon } from "./toolbar-icon";
@@ -27,7 +28,7 @@ import { WindowMovesPlanning } from "./window-moves-planning";
 // The kinds of planning, in the order their steps run: each window's tabs
 // come across first, then the pinned ones are pinned again.
 const planning: PlanStrategy[] = [
-  new WindowMovesPlanning([
+  new WindowMovesPlanning(new GroupRuns(), [
     new LooseTabsPlanning(new TabsMoveBuilder(chrome.tabs)),
     new GroupPlanning(new GroupMoveBuilder(chrome.tabGroups)),
   ]),
