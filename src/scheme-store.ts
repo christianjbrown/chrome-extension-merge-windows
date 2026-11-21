@@ -1,4 +1,5 @@
 import { readSchemeState } from "./read-scheme-state";
+import type { SchemeMemory } from "./scheme-memory";
 import type { SchemeState } from "./scheme-state";
 
 export interface StorageArea {
@@ -10,7 +11,7 @@ const STORAGE_KEY = "toolbarScheme";
 
 // Keeps what is known about the toolbar's colour across service worker sleeps
 // and Chrome restarts, so the button is right before anyone clicks it again.
-export class SchemeStore {
+export class SchemeStore implements SchemeMemory {
   constructor(
     private readonly area: StorageArea,
     // What to start from when nothing usable was saved.

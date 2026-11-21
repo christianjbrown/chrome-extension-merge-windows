@@ -1,4 +1,4 @@
-import { TabOrderPlanner } from "../src/merge-planner";
+import { TabOrderPlanner } from "../src/tab-order-planner";
 import { names, recordingSteps } from "./fakes";
 
 const tab = (id: number | undefined, groupId = -1, pinned = false) => ({

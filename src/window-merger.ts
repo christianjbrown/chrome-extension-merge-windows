@@ -1,10 +1,7 @@
 import { MERGEABLE_WINDOW_TYPES, type WindowSource } from "./browser-windows";
+import type { Merger } from "./merger";
 import type { MergePlanner } from "./merge-planner";
 import type { MergeTargets } from "./merge-targets";
-
-export interface Merger {
-  mergeInto(windowId: number): Promise<void>;
-}
 
 // Pulls the tabs of every window that may give them into the given one.
 // Chrome closes each window once it is empty.

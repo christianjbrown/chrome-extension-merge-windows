@@ -1,5 +1,6 @@
 import type { ColourScheme } from "./colour-scheme";
 import { schemeMessage, type SchemeMessage } from "./scheme-message";
+import type { SchemeSink } from "./scheme-sink";
 
 export interface MessageChannel {
   sendMessage(message: SchemeMessage): Promise<unknown>;
@@ -7,7 +8,7 @@ export interface MessageChannel {
 
 // Tells the service worker which colour scheme Chrome is in, but only when it
 // is not what it last said.
-export class SchemeReporter {
+export class SchemeReporter implements SchemeSink {
   private reported: ColourScheme | undefined;
 
   constructor(private readonly channel: MessageChannel) {}

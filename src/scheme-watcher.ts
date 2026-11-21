@@ -1,12 +1,9 @@
-import { schemeFor, type ColourScheme } from "./colour-scheme";
+import { schemeFor } from "./colour-scheme";
+import type { SchemeSink } from "./scheme-sink";
 
 // The part of a MediaQueryList this needs.
 export interface SchemeQuery {
   readonly matches: boolean;
-}
-
-export interface SchemeSink {
-  report(scheme: ColourScheme): void;
 }
 
 // Runs the work again and again, the way setInterval does.
