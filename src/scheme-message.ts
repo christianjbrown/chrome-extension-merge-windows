@@ -1,11 +1,21 @@
-import { COLOUR_SCHEMES, type ColourScheme } from "./colour-scheme";
+import { isColourScheme, type ColourScheme } from "./colour-scheme";
+
+// Who a runtime message is for, and which kind it is.
+export const BACKGROUND_TARGET = "background";
+export const SCHEME_MESSAGE_TYPE = "scheme";
 
 // What the offscreen document tells the service worker.
 export interface SchemeMessage {
-  target: "background";
-  type: "scheme";
+  target: typeof BACKGROUND_TARGET;
+  type: typeof SCHEME_MESSAGE_TYPE;
   scheme: ColourScheme;
 }
+
+export const schemeMessage = (scheme: ColourScheme): SchemeMessage => ({
+  target: BACKGROUND_TARGET,
+  type: SCHEME_MESSAGE_TYPE,
+  scheme,
+});
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
@@ -13,8 +23,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 export function isSchemeMessage(message: unknown): message is SchemeMessage {
   return (
     isRecord(message) &&
-    message.target === "background" &&
-    message.type === "scheme" &&
-    (COLOUR_SCHEMES as readonly unknown[]).includes(message.scheme)
+    message.target === BACKGROUND_TARGET &&
+    message.type === SCHEME_MESSAGE_TYPE &&
+    isColourScheme(message.scheme)
   );
 }

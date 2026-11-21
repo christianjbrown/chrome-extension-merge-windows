@@ -1,5 +1,5 @@
 import { schemeFor, type ColourScheme } from "./colour-scheme";
-import type { SchemeMessage } from "./scheme-message";
+import { schemeMessage, type SchemeMessage } from "./scheme-message";
 
 // The part of a MediaQueryList this needs.
 export interface SchemeQuery {
@@ -43,10 +43,8 @@ export class SchemeReporter {
       return;
     }
     this.reported = scheme;
-    this.channel
-      .sendMessage({ target: "background", type: "scheme", scheme })
-      .catch(() => {
-        this.reported = undefined;
-      });
+    this.channel.sendMessage(schemeMessage(scheme)).catch(() => {
+      this.reported = undefined;
+    });
   }
 }

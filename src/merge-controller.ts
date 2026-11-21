@@ -6,6 +6,8 @@ export interface ClickedTab {
   windowId?: number | undefined;
 }
 
+const NO_WINDOW_MESSAGE = "This window cannot take other windows' tabs";
+
 // One click, one merge, and the button says if it went wrong.
 export class MergeController {
   private busy = false;
@@ -23,7 +25,7 @@ export class MergeController {
     this.busy = true;
     try {
       if (tab.windowId === undefined) {
-        throw new Error("This window cannot take other windows' tabs");
+        throw new Error(NO_WINDOW_MESSAGE);
       }
       await this.merger.mergeInto(tab.windowId);
       await this.indicator.showIdle();

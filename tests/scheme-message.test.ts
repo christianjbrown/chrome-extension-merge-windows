@@ -1,4 +1,9 @@
-import { isSchemeMessage } from "../src/scheme-message";
+import {
+  BACKGROUND_TARGET,
+  isSchemeMessage,
+  SCHEME_MESSAGE_TYPE,
+  schemeMessage,
+} from "../src/scheme-message";
 
 const scheme = (name: unknown) => ({
   target: "background",
@@ -19,5 +24,16 @@ describe("isSchemeMessage", () => {
     ["a string", "dark"],
   ])("rejects %s", (_name, message) => {
     expect(isSchemeMessage(message)).toBe(false);
+  });
+
+  it("accepts what schemeMessage builds", () => {
+    const message = schemeMessage("light");
+
+    expect(message).toEqual({
+      target: BACKGROUND_TARGET,
+      type: SCHEME_MESSAGE_TYPE,
+      scheme: "light",
+    });
+    expect(isSchemeMessage(message)).toBe(true);
   });
 });

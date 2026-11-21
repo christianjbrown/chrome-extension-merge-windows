@@ -15,22 +15,28 @@ interface Look {
 const RED = "#dc2626";
 const GREY = "#5a5a60";
 
+// Matches the action's default_title in the manifest, and a test pins it.
+export const IDLE_TITLE = "Merge every window into this one";
+const FAILED_TITLE_PREFIX = "Merge failed: ";
+const NO_BADGE = "";
+const ERROR_BADGE = "!";
+
 export class ToolbarIndicator implements MergeIndicator {
   constructor(private readonly action: ToolbarAction) {}
 
   showIdle(): Promise<void> {
     return this.show({
-      badge: "",
+      badge: NO_BADGE,
       colour: GREY,
-      title: "Merge every window into this one",
+      title: IDLE_TITLE,
     });
   }
 
   showError(message: string): Promise<void> {
     return this.show({
-      badge: "!",
+      badge: ERROR_BADGE,
       colour: RED,
-      title: `Merge failed: ${message}`,
+      title: `${FAILED_TITLE_PREFIX}${message}`,
     });
   }
 

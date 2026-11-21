@@ -1,4 +1,4 @@
-import { COLOUR_SCHEMES, DARK, type ColourScheme } from "./colour-scheme";
+import { DARK, type ColourScheme } from "./colour-scheme";
 
 // What is known about the colour of Chrome's toolbar.
 //
@@ -14,9 +14,6 @@ export interface SchemeState {
 
 // Matches the icon the manifest starts with.
 export const UNKNOWN_SCHEME: SchemeState = { device: DARK, chrome: null };
-
-export const isColourScheme = (value: unknown): value is ColourScheme =>
-  (COLOUR_SCHEMES as readonly unknown[]).includes(value);
 
 export const toolbarScheme = (state: SchemeState): ColourScheme =>
   state.chrome ?? state.device;
