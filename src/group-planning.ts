@@ -1,7 +1,7 @@
 import type { GroupMoveDetails } from "./group-move";
 import type { MergeStep, StepBuilder } from "./merge-steps";
 import type { RunStrategy } from "./run-strategy";
-import { NO_GROUP, type TabRun } from "./tab-runs";
+import { NO_GROUP, type TabRun } from "./run-splitter";
 
 // A group goes across whole, which keeps it a group.
 export class GroupPlanning implements RunStrategy {

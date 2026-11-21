@@ -1,4 +1,3 @@
-import { MERGE_LOOKS } from "../src/merge-looks";
 import { ToolbarIndicator } from "../src/toolbar-indicator";
 
 function action() {
@@ -9,44 +8,20 @@ function action() {
   };
 }
 
-const looks = {
-  idle: { badge: "i", colour: "#111", title: "idle" },
-  failed: (error: unknown) => ({
-    badge: "f",
-    colour: "#222",
-    title: `failed ${String(error)}`,
-  }),
-};
-
 describe("ToolbarIndicator", () => {
-  it.each([
-    {
-      show: (indicator: ToolbarIndicator) => indicator.showIdle(),
-      text: "i",
-      color: "#111",
-      title: "idle",
-    },
-    {
-      show: (indicator: ToolbarIndicator) => indicator.showError("no luck"),
-      text: "f",
+  it("puts the look's badge, colour and title on the button", async () => {
+    const toolbar = action();
+
+    await new ToolbarIndicator(toolbar).show({
+      badge: "f",
+      colour: "#222",
+      title: "failed",
+    });
+
+    expect(toolbar.setBadgeText).toHaveBeenCalledWith({ text: "f" });
+    expect(toolbar.setBadgeBackgroundColor).toHaveBeenCalledWith({
       color: "#222",
-      title: "failed no luck",
-    },
-  ])("shows $title", async ({ show, text, color, title }) => {
-    const toolbar = action();
-
-    await show(new ToolbarIndicator(toolbar, looks));
-
-    expect(toolbar.setBadgeText).toHaveBeenCalledWith({ text });
-    expect(toolbar.setBadgeBackgroundColor).toHaveBeenCalledWith({ color });
-    expect(toolbar.setTitle).toHaveBeenCalledWith({ title });
-  });
-
-  it("can take the extension's own looks", async () => {
-    const toolbar = action();
-
-    await new ToolbarIndicator(toolbar, MERGE_LOOKS).showIdle();
-
-    expect(toolbar.setBadgeText).toHaveBeenCalledWith({ text: "" });
+    });
+    expect(toolbar.setTitle).toHaveBeenCalledWith({ title: "failed" });
   });
 });

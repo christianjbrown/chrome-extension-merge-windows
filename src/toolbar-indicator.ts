@@ -1,4 +1,4 @@
-import type { Look, MergeLooks } from "./looks";
+import type { Look } from "./looks";
 import type { MergeIndicator } from "./merge-indicator";
 
 export interface ToolbarAction {
@@ -8,20 +8,9 @@ export interface ToolbarAction {
 }
 
 export class ToolbarIndicator implements MergeIndicator {
-  constructor(
-    private readonly action: ToolbarAction,
-    private readonly looks: MergeLooks,
-  ) {}
+  constructor(private readonly action: ToolbarAction) {}
 
-  showIdle(): Promise<void> {
-    return this.show(this.looks.idle);
-  }
-
-  showError(error: unknown): Promise<void> {
-    return this.show(this.looks.failed(error));
-  }
-
-  private async show(look: Look): Promise<void> {
+  async show(look: Look): Promise<void> {
     await Promise.all([
       this.action.setBadgeText({ text: look.badge }),
       this.action.setBadgeBackgroundColor({ color: look.colour }),

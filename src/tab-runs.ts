@@ -1,20 +1,12 @@
 import type { BrowserTab } from "./browser-windows";
-
-// chrome.tabGroups.TAB_GROUP_ID_NONE, which a service worker could read, but
-// planning would then depend on chrome.
-export const NO_GROUP = -1;
-
-// Tabs next to each other in one window that share a group, or share having
-// none.
-export interface TabRun {
-  groupId: number;
-  tabs: BrowserTab[];
-}
+import { NO_GROUP, type RunSplitter, type TabRun } from "./run-splitter";
 
 // Splits a window's tabs into runs. A group appears once, where its first tab
 // is, and the ungrouped tabs either side of a repeat join up.
-export function tabRuns(tabs: BrowserTab[]): TabRun[] {
-  return joinNeighbours(joinNeighbours(tabs.map(runOf)).filter(firstOfGroup));
+export class GroupRuns implements RunSplitter {
+  runs(tabs: BrowserTab[]): TabRun[] {
+    return joinNeighbours(joinNeighbours(tabs.map(runOf)).filter(firstOfGroup));
+  }
 }
 
 const runOf = (tab: BrowserTab): TabRun => ({

@@ -1,5 +1,5 @@
 import { errorMessage } from "./error-message";
-import type { MergeLooks } from "./looks";
+import type { FailureLook, Look } from "./looks";
 
 const RED = "#dc2626";
 const GREY = "#5a5a60";
@@ -10,11 +10,20 @@ const FAILED_TITLE_PREFIX = "Merge failed: ";
 const NO_BADGE = "";
 const ERROR_BADGE = "!";
 
-export const MERGE_LOOKS: MergeLooks = {
-  idle: { badge: NO_BADGE, colour: GREY, title: IDLE_TITLE },
-  failed: (error) => ({
-    badge: ERROR_BADGE,
-    colour: RED,
-    title: `${FAILED_TITLE_PREFIX}${errorMessage(error)}`,
-  }),
+// Waiting for a click: plain and grey.
+export const IDLE_LOOK: Look = {
+  badge: NO_BADGE,
+  colour: GREY,
+  title: IDLE_TITLE,
 };
+
+// A red exclamation mark, with what went wrong in the title.
+export class FailedLook implements FailureLook {
+  look(error: unknown): Look {
+    return {
+      badge: ERROR_BADGE,
+      colour: RED,
+      title: `${FAILED_TITLE_PREFIX}${errorMessage(error)}`,
+    };
+  }
+}

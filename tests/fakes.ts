@@ -3,6 +3,7 @@ import { GroupPlanning } from "../src/group-planning";
 import { LooseTabsPlanning } from "../src/loose-tabs-planning";
 import { PinPlanning } from "../src/pin-planning";
 import type { PlanStrategy } from "../src/plan-strategy";
+import { GroupRuns } from "../src/tab-runs";
 import { WindowMovesPlanning } from "../src/window-moves-planning";
 
 const step = (name: string): MergeStep & { name: string } => ({
@@ -13,7 +14,7 @@ const step = (name: string): MergeStep & { name: string } => ({
 // The planning main.ts lists, with steps that say what they are, so a plan can
 // be compared with toEqual.
 export const recordingPlanning = (): PlanStrategy[] => [
-  new WindowMovesPlanning([
+  new WindowMovesPlanning(new GroupRuns(), [
     new LooseTabsPlanning({
       build: ({ tabIds }) => step(`tabs ${tabIds.join(",")}`),
     }),

@@ -1,3 +1,4 @@
+import type { FailureLook, Look } from "./looks";
 import type { MergeIndicator } from "./merge-indicator";
 import type { Merger } from "./merger";
 
@@ -22,6 +23,10 @@ export class MergeController {
   constructor(
     private readonly merger: Merger,
     private readonly indicator: MergeIndicator,
+    // How the button looks after a merge that worked, and after one that
+    // failed.
+    private readonly idle: Look,
+    private readonly failed: FailureLook,
   ) {}
 
   async merge(tab: ClickedTab): Promise<void> {
@@ -36,9 +41,9 @@ export class MergeController {
     this.busy = true;
     try {
       await this.merger.mergeInto(windowOf(tab));
-      await this.indicator.showIdle();
+      await this.indicator.show(this.idle);
     } catch (error) {
-      await this.indicator.showError(error);
+      await this.indicator.show(this.failed.look(error));
     } finally {
       this.busy = false;
     }
