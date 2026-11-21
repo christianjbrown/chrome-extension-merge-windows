@@ -1,4 +1,4 @@
-# Merge Windows Chrome Extension 🪟
+# Merge Windows and Tabs Chrome Extension 🪟
 
 One button in your Chrome toolbar. Click it and every other Chrome window folds into the one you're looking at. Minimised ones, popups, that window you forgot about on the other desktop: all of it. No options page, no settings, no menu. Click, done.
 
@@ -31,7 +31,7 @@ You need [Node.js](https://nodejs.org) 22 or newer, and Chrome 126 or newer.
 2. Open `chrome://extensions` in Chrome.
 3. Flip on **Developer mode** (top right).
 4. Click **Load unpacked** and pick the `dist` folder.
-5. Click the puzzle piece 🧩 in the toolbar and hit the pin next to **Christian's Merge Windows**.
+5. Click the puzzle piece 🧩 in the toolbar and hit the pin next to **Christian's Merge Windows and Tabs**.
 
 ### Updating 🔄
 
@@ -41,7 +41,7 @@ npm ci
 npm run build
 ```
 
-Then hit the reload arrow on the Christian's Merge Windows card in `chrome://extensions`.
+Then hit the reload arrow on the Christian's Merge Windows and Tabs card in `chrome://extensions`.
 
 ## Good to know 🤓
 
