@@ -1,35 +1,44 @@
 // The service worker: builds the object graph and connects it to Chrome's events.
 import { ClickScheme } from "./click-scheme";
 import { GroupMoveBuilder } from "./group-move";
+import { GroupPlanning } from "./group-planning";
+import { LooseTabsPlanning } from "./loose-tabs-planning";
 import { MergeController } from "./merge-controller";
 import { MERGE_LOOKS } from "./merge-looks";
 import { OrdinaryTargets } from "./ordinary-targets";
 import { PinBuilder } from "./pin";
+import { PinPlanning } from "./pin-planning";
+import type { PlanStrategy } from "./plan-strategy";
 import { OFFSCREEN_PAGE, SchemeDocument } from "./scheme-document";
 import { SchemeListener } from "./scheme-listener";
 import { SCHEME_POLICY } from "./scheme-rules";
 import { UNKNOWN_SCHEME } from "./scheme-state";
 import { SchemeStore } from "./scheme-store";
 import { SerialQueue } from "./serial-queue";
-import { TabOrderPlanner, type PlanSteps } from "./tab-order-planner";
+import { TabOrderPlanner } from "./tab-order-planner";
 import { TabScheme } from "./tab-scheme";
 import { TabsMoveBuilder } from "./tabs-move";
 import { ToolbarIcon } from "./toolbar-icon";
 import { ToolbarIndicator } from "./toolbar-indicator";
 import { ToolbarScheme } from "./toolbar-scheme";
 import { WindowMerger } from "./window-merger";
+import { WindowMovesPlanning } from "./window-moves-planning";
 
-const planSteps = {
-  moveTabs: new TabsMoveBuilder(chrome.tabs),
-  moveGroup: new GroupMoveBuilder(chrome.tabGroups),
-  pin: new PinBuilder(chrome.tabs),
-} satisfies PlanSteps;
+// The kinds of planning, in the order their steps run: each window's tabs
+// come across first, then the pinned ones are pinned again.
+const planning: PlanStrategy[] = [
+  new WindowMovesPlanning([
+    new LooseTabsPlanning(new TabsMoveBuilder(chrome.tabs)),
+    new GroupPlanning(new GroupMoveBuilder(chrome.tabGroups)),
+  ]),
+  new PinPlanning(new PinBuilder(chrome.tabs)),
+];
 
 const controller = new MergeController(
   new WindowMerger(
     chrome.windows,
     new OrdinaryTargets(),
-    new TabOrderPlanner(planSteps),
+    new TabOrderPlanner(planning),
   ),
   new ToolbarIndicator(chrome.action, MERGE_LOOKS),
 );
