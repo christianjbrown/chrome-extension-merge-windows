@@ -65,18 +65,18 @@ npm test          # the unit tests
 npm run ci        # everything CI checks: format, lint, types, unused code, 100% coverage, build
 ```
 
-`npm run ci` is exactly what CI runs, and coverage has to stay at 100% for lines, branches, functions and statements, or it fails. To run it before every push, point git at the committed hook: `git config core.hooksPath .githooks`.
+`npm run ci` is exactly what CI runs, and coverage has to stay at 100% for lines, branches, functions and statements, or it fails. Lint also holds every function in `src` to a single decision, so full branch coverage means every path gets tested too. To run it before every push, point git at the committed hook: `git config core.hooksPath .githooks`.
 
 How it fits together, all in `src`:
 
 - **`main.ts`** wires the pieces to Chrome. Nothing else touches `chrome` directly.
 - **`scheme-document.ts`, `scheme-reporter.ts` and `scheme-listener.ts`** keep the button's colour in step with Chrome: a hidden offscreen document checks light or dark once a second and the service worker swaps the icon.
-- **`scheme-state.ts`, `scheme-rules.ts`, `scheme-store.ts`, `toolbar-scheme.ts`, `tab-scheme.ts` and `click-scheme.ts`** sort out which report to believe: the device's, or the one a clicked tab gives for Chrome's own setting, which wins and is kept in `chrome.storage.local`.
+- **`scheme-state.ts`, `scheme-rules.ts`, `scheme-store.ts`, `toolbar-scheme.ts`, `tab-scheme.ts` and `click-scheme.ts`** sort out which report to believe: the device's, or the one a clicked tab gives for Chrome's own setting, which wins and is kept in `chrome.storage.local`. `serial-queue.ts` takes the reports one at a time.
 - **`merge-controller.ts`** handles a click: merge, then clear the badge or show what went wrong.
 - **`window-merger.ts`** fetches every normal and popup window and runs the plan for the ones that can give their tabs.
 - **`ordinary-targets.ts`** decides which those are: only an ordinary window takes tabs, and incognito stays with incognito.
-- **`tab-order-planner.ts`** works out the moves: runs of loose tabs in one go, groups whole, then re-pin the pinned ones.
-- **`tabs-move.ts`, `group-move.ts` and `pin.ts`** are the moves themselves, as `chrome.tabs` and `chrome.tabGroups` calls. Each one brings its own builder and says what it needs to know, and `main.ts` hands the builders to the planner. A new kind of move is a new file plus one line there.
+- **`tab-order-planner.ts`** works out the moves by asking each kind of planning `main.ts` lists. `window-moves-planning.ts` splits each window into runs (`tab-runs.ts`) and hands them to `loose-tabs-planning.ts` and `group-planning.ts`, so loose tabs go in one go and groups go whole. Then `pin-planning.ts` re-pins the pinned ones. Each kind decides for itself whether it has anything to do.
+- **`tabs-move.ts`, `group-move.ts` and `pin.ts`** are the moves themselves, as `chrome.tabs` and `chrome.tabGroups` calls. Each one brings its own builder and says what it needs to know, and `main.ts` hands each builder to its kind of planning. A new kind of move is a new move, a new kind of planning and one line there.
 
 Every class gets its collaborators through its constructor, behind an interface in a small file of its own (`merger.ts`, `scheme-memory.ts` and friends), so each one is tested on its own with fakes.
 
