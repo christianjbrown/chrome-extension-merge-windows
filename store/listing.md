@@ -15,8 +15,8 @@ Run `npm run package` and upload the `extension.zip` it makes. Bump `version` in
 - **Store icon:** `icon-128.png`
 - **Screenshot:** `screenshot-1280x800.png`
 - **Small promo tile:** `promo-440x280.png`
-- **Homepage URL:** https://github.com/christianjbrown/chrome-extension-merge-windows
-- **Support URL:** https://github.com/christianjbrown/chrome-extension-merge-windows/issues
+- **Homepage URL:** https://github.com/christianjbrown/chrome-extension-merge-windows-and-tabs
+- **Support URL:** https://github.com/christianjbrown/chrome-extension-merge-windows-and-tabs/issues
 
 **Description**
 
@@ -76,7 +76,7 @@ Remembers which colour scheme the toolbar is in, so the icon matches it after Ch
 
 **Data usage:** tick none of the data types, then tick all three certifications.
 
-**Privacy policy URL:** https://github.com/christianjbrown/chrome-extension-merge-windows/blob/main/PRIVACY.md
+**Privacy policy URL:** https://github.com/christianjbrown/chrome-extension-merge-windows-and-tabs/blob/main/PRIVACY.md
 
 ## Distribution
 
