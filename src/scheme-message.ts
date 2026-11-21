@@ -19,10 +19,15 @@ export const schemeMessage = (scheme: ColourScheme): SchemeMessage => ({
 });
 
 export function isSchemeMessage(message: unknown): message is SchemeMessage {
+  return isRecord(message) && carriesScheme(message);
+}
+
+function carriesScheme(message: Record<string, unknown>): boolean {
+  return isForBackground(message) && isColourScheme(message.scheme);
+}
+
+function isForBackground(message: Record<string, unknown>): boolean {
   return (
-    isRecord(message) &&
-    message.target === BACKGROUND_TARGET &&
-    message.type === SCHEME_MESSAGE_TYPE &&
-    isColourScheme(message.scheme)
+    message.target === BACKGROUND_TARGET && message.type === SCHEME_MESSAGE_TYPE
   );
 }
