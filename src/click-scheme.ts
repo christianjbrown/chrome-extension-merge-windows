@@ -13,7 +13,12 @@ export class ClickScheme {
     if (tab.id === undefined) {
       return;
     }
-    const scheme = await this.reader.read(tab.id);
+    await this.readFrom(tab.id);
+  }
+
+  // Some tabs cannot be read, and then there is nothing to pass on.
+  private async readFrom(tabId: number): Promise<void> {
+    const scheme = await this.reader.read(tabId);
     if (scheme !== undefined) {
       await this.sink.tabShows(scheme);
     }

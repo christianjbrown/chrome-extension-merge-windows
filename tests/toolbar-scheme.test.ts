@@ -1,5 +1,6 @@
 import { SCHEME_POLICY } from "../src/scheme-rules";
 import type { SchemeState } from "../src/scheme-state";
+import { SerialQueue } from "../src/serial-queue";
 import { ToolbarScheme } from "../src/toolbar-scheme";
 
 function fakes(start: SchemeState = { device: "dark", chrome: null }) {
@@ -15,7 +16,7 @@ function fakes(start: SchemeState = { device: "dark", chrome: null }) {
   return {
     memory,
     icon,
-    scheme: new ToolbarScheme(memory, icon, SCHEME_POLICY),
+    scheme: new ToolbarScheme(memory, icon, SCHEME_POLICY, new SerialQueue()),
   };
 }
 

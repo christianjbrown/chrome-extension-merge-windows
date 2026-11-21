@@ -1,5 +1,6 @@
 import { isColourScheme } from "./colour-scheme";
 import { isRecord } from "./is-record";
+import type { ColourScheme } from "./colour-scheme";
 import type { SchemeState } from "./scheme-state";
 
 // Reads a saved state back, taking anything that is not a colour scheme for
@@ -8,12 +9,22 @@ export function readSchemeState(
   stored: unknown,
   unknown: SchemeState,
 ): SchemeState {
-  if (!isRecord(stored)) {
-    return unknown;
-  }
-  const { device, chrome } = stored;
+  return isRecord(stored) ? readFields(stored, unknown) : unknown;
+}
+
+function readFields(
+  { device, chrome }: Record<string, unknown>,
+  unknown: SchemeState,
+): SchemeState {
   return {
-    device: isColourScheme(device) ? device : unknown.device,
-    chrome: isColourScheme(chrome) ? chrome : null,
+    device: schemeOr(device, unknown.device),
+    chrome: schemeOr(chrome, null),
   };
+}
+
+function schemeOr<Fallback>(
+  value: unknown,
+  fallback: Fallback,
+): ColourScheme | Fallback {
+  return isColourScheme(value) ? value : fallback;
 }

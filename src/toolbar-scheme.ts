@@ -4,17 +4,17 @@ import type { SchemeIcon } from "./scheme-icon";
 import type { SchemeMemory } from "./scheme-memory";
 import type { SchemePolicy } from "./scheme-policy";
 import type { SchemeState } from "./scheme-state";
+import type { Sequencer } from "./sequencer";
 import type { TabSchemeSink } from "./tab-scheme-sink";
 
 // Works out which colour scheme the toolbar is in from the two things that
 // report one, and keeps the button's icon in step.
 export class ToolbarScheme implements DeviceScheme, TabSchemeSink {
-  private last: Promise<void> = Promise.resolve();
-
   constructor(
     private readonly memory: SchemeMemory,
     private readonly icon: SchemeIcon,
     private readonly policy: SchemePolicy,
+    private readonly queue: Sequencer,
   ) {}
 
   // The offscreen document saw the device's scheme.
@@ -29,12 +29,10 @@ export class ToolbarScheme implements DeviceScheme, TabSchemeSink {
 
   // One at a time, so a report cannot save over one that arrived beside it.
   private update(change: (state: SchemeState) => SchemeState): Promise<void> {
-    const turn = this.last.then(async () => {
+    return this.queue.run(async () => {
       const next = change(await this.memory.load());
       await this.memory.save(next);
       await this.icon.show(this.policy.toolbarScheme(next));
     });
-    this.last = turn.catch(() => undefined);
-    return turn;
   }
 }
