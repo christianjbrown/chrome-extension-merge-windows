@@ -76,7 +76,7 @@ How it fits together, all in `src`:
 - **`window-merger.ts`** fetches every normal and popup window and runs the plan for the ones that can give their tabs.
 - **`ordinary-targets.ts`** decides which those are: only an ordinary window takes tabs, and incognito stays with incognito.
 - **`tab-order-planner.ts`** works out the moves: runs of loose tabs in one go, groups whole, then re-pin the pinned ones.
-- **`step-registry.ts`** makes each move with the builder `main.ts` registered for its kind, and **`chrome-merge-steps.ts`** holds the steps themselves, as `chrome.tabs` and `chrome.tabGroups` calls.
+- **`tabs-move.ts`, `group-move.ts` and `pin.ts`** are the moves themselves, as `chrome.tabs` and `chrome.tabGroups` calls. Each one brings its own builder and says what it needs to know, and `main.ts` hands the builders to the planner. A new kind of move is a new file plus one line there.
 
 Every class gets its collaborators through its constructor, behind an interface in a small file of its own (`merger.ts`, `scheme-memory.ts` and friends), so each one is tested on its own with fakes.
 
