@@ -1,9 +1,16 @@
-import type { BrowserWindow, WindowSource } from "./browser-windows";
+import {
+  MERGEABLE_WINDOW_TYPES,
+  NORMAL_WINDOW,
+  type BrowserWindow,
+  type WindowSource,
+} from "./browser-windows";
 import type { MergePlanner } from "./merge-planner";
 
 export interface Merger {
   mergeInto(windowId: number): Promise<void>;
 }
+
+const POPUP_TARGET_MESSAGE = "Merge from an ordinary window, not a popup";
 
 // Pulls the tabs of every other window into the given one. Minimised windows
 // and popups are included. Chrome closes each window once it is empty.
@@ -16,7 +23,7 @@ export class WindowMerger implements Merger {
   async mergeInto(windowId: number): Promise<void> {
     const all = await this.windows.getAll({
       populate: true,
-      windowTypes: ["normal", "popup"],
+      windowTypes: [...MERGEABLE_WINDOW_TYPES],
     });
     const target = this.targetIn(all, windowId);
     // Chrome will not move a tab between an incognito window and an ordinary
@@ -32,8 +39,8 @@ export class WindowMerger implements Merger {
 
   private targetIn(all: BrowserWindow[], windowId: number): BrowserWindow {
     const target = all.find((window) => window.id === windowId);
-    if (target?.type !== "normal") {
-      throw new Error("Merge from an ordinary window, not a popup");
+    if (target?.type !== NORMAL_WINDOW) {
+      throw new Error(POPUP_TARGET_MESSAGE);
     }
     return target;
   }

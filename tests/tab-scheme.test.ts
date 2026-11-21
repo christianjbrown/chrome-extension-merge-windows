@@ -1,3 +1,4 @@
+import { DARK_SCHEME_QUERY } from "../src/colour-scheme";
 import { TabScheme, tabPrefersDark } from "../src/tab-scheme";
 
 function scripting(result: unknown) {
@@ -48,6 +49,6 @@ describe("tabPrefersDark", () => {
     vi.stubGlobal("matchMedia", matchMedia);
 
     expect(tabPrefersDark()).toBe(true);
-    expect(matchMedia).toHaveBeenCalledWith("(prefers-color-scheme: dark)");
+    expect(matchMedia).toHaveBeenCalledWith(DARK_SCHEME_QUERY);
   });
 });

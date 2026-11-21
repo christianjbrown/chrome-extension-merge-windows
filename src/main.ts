@@ -2,9 +2,11 @@
 import { ClickScheme } from "./click-scheme";
 import { ChromeMergeSteps } from "./chrome-merge-steps";
 import { MergeController } from "./merge-controller";
+import { MERGE_LOOKS } from "./merge-looks";
 import { TabOrderPlanner } from "./merge-planner";
-import { SchemeDocument } from "./scheme-document";
+import { OFFSCREEN_PAGE, SchemeDocument } from "./scheme-document";
 import { SchemeListener } from "./scheme-listener";
+import { SCHEME_POLICY, UNKNOWN_SCHEME } from "./scheme-state";
 import { SchemeStore } from "./scheme-store";
 import { TabScheme } from "./tab-scheme";
 import { ToolbarIcon } from "./toolbar-icon";
@@ -17,11 +19,12 @@ const controller = new MergeController(
     chrome.windows,
     new TabOrderPlanner(new ChromeMergeSteps(chrome.tabs, chrome.tabGroups)),
   ),
-  new ToolbarIndicator(chrome.action),
+  new ToolbarIndicator(chrome.action, MERGE_LOOKS),
 );
 const toolbarScheme = new ToolbarScheme(
-  new SchemeStore(chrome.storage.local),
+  new SchemeStore(chrome.storage.local, UNKNOWN_SCHEME),
   new ToolbarIcon(chrome.action),
+  SCHEME_POLICY,
 );
 const clickScheme = new ClickScheme(
   new TabScheme(chrome.scripting),
@@ -30,7 +33,7 @@ const clickScheme = new ClickScheme(
 const schemeDocument = new SchemeDocument(
   chrome.offscreen,
   chrome.runtime,
-  "offscreen.html",
+  OFFSCREEN_PAGE,
 );
 const schemeListener = new SchemeListener(toolbarScheme, chrome.runtime.id);
 

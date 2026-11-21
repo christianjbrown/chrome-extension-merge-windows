@@ -1,3 +1,10 @@
+// The kinds of window the extension asks Chrome for.
+export const NORMAL_WINDOW = "normal";
+const POPUP_WINDOW = "popup";
+export const MERGEABLE_WINDOW_TYPES = [NORMAL_WINDOW, POPUP_WINDOW] as const;
+
+type MergeableWindowType = (typeof MERGEABLE_WINDOW_TYPES)[number];
+
 export interface BrowserTab {
   id?: number | undefined;
   pinned: boolean;
@@ -13,7 +20,7 @@ export interface BrowserWindow {
 
 interface WindowQuery {
   populate: boolean;
-  windowTypes: ("normal" | "popup")[];
+  windowTypes: MergeableWindowType[];
 }
 
 export interface WindowSource {

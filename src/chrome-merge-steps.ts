@@ -7,6 +7,9 @@ interface MoveProperties {
 
 export interface TabMover {
   move(tabIds: number[], properties: MoveProperties): Promise<unknown>;
+}
+
+export interface TabPinner {
   update(tabId: number, properties: { pinned: boolean }): Promise<unknown>;
 }
 
@@ -45,7 +48,7 @@ class GroupMove implements MergeStep {
 // Chrome then slots it in at the end of the pinned ones.
 class Pin implements MergeStep {
   constructor(
-    private readonly tabs: TabMover,
+    private readonly tabs: TabPinner,
     private readonly tabIds: number[],
   ) {}
 
@@ -58,7 +61,7 @@ class Pin implements MergeStep {
 
 export class ChromeMergeSteps implements MergeSteps {
   constructor(
-    private readonly tabs: TabMover,
+    private readonly tabs: TabMover & TabPinner,
     private readonly groups: GroupMover,
   ) {}
 

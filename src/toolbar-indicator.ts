@@ -1,3 +1,4 @@
+import type { Look, MergeLooks } from "./merge-looks";
 import type { MergeIndicator } from "./merge-indicator";
 
 export interface ToolbarAction {
@@ -6,32 +7,18 @@ export interface ToolbarAction {
   setTitle(details: { title: string }): Promise<void>;
 }
 
-interface Look {
-  badge: string;
-  colour: string;
-  title: string;
-}
-
-const RED = "#dc2626";
-const GREY = "#5a5a60";
-
 export class ToolbarIndicator implements MergeIndicator {
-  constructor(private readonly action: ToolbarAction) {}
+  constructor(
+    private readonly action: ToolbarAction,
+    private readonly looks: MergeLooks,
+  ) {}
 
   showIdle(): Promise<void> {
-    return this.show({
-      badge: "",
-      colour: GREY,
-      title: "Merge every window into this one",
-    });
+    return this.show(this.looks.idle);
   }
 
-  showError(message: string): Promise<void> {
-    return this.show({
-      badge: "!",
-      colour: RED,
-      title: `Merge failed: ${message}`,
-    });
+  showError(error: unknown): Promise<void> {
+    return this.show(this.looks.failed(error));
   }
 
   private async show(look: Look): Promise<void> {

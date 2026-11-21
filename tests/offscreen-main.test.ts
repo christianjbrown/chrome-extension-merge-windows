@@ -1,3 +1,5 @@
+import { DARK_SCHEME_QUERY } from "../src/colour-scheme";
+
 // Drives the offscreen document's wiring through a fake window and chrome.
 describe("offscreen document", () => {
   it("tells the service worker the colour scheme, and keeps looking", async () => {
@@ -11,7 +13,7 @@ describe("offscreen document", () => {
 
     await import("../src/offscreen-main");
 
-    expect(matchMedia).toHaveBeenCalledWith("(prefers-color-scheme: dark)");
+    expect(matchMedia).toHaveBeenCalledWith(DARK_SCHEME_QUERY);
     expect(sendMessage).toHaveBeenCalledWith({
       target: "background",
       type: "scheme",
