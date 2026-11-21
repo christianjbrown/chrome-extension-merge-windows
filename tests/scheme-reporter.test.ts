@@ -1,26 +1,5 @@
 import { SchemeReporter } from "../src/scheme-reporter";
 
-const EVERY_MS = 250;
-
-function start(dark: boolean, sendMessage = vi.fn().mockResolvedValue(1)) {
-  const query = { matches: dark };
-  const ticks: (() => void)[] = [];
-  const repeat = vi.fn((work: () => void) => {
-    ticks.push(work);
-  });
-  new SchemeReporter(query, { sendMessage }, repeat, EVERY_MS).start();
-  return {
-    query,
-    sendMessage,
-    repeat,
-    tick: () => {
-      ticks.forEach((work) => {
-        work();
-      });
-    },
-  };
-}
-
 const report = (scheme: string) => ({
   target: "background",
   type: "scheme",
@@ -28,40 +7,30 @@ const report = (scheme: string) => ({
 });
 
 describe("SchemeReporter", () => {
-  it("reports a dark scheme as soon as it starts", () => {
-    const { sendMessage } = start(true);
+  it("reports a scheme it has not reported yet", () => {
+    const sendMessage = vi.fn().mockResolvedValue(1);
+
+    new SchemeReporter({ sendMessage }).report("dark");
 
     expect(sendMessage).toHaveBeenCalledExactlyOnceWith(report("dark"));
   });
 
-  it("reports a light scheme as soon as it starts", () => {
-    const { sendMessage } = start(false);
-
-    expect(sendMessage).toHaveBeenCalledExactlyOnceWith(report("light"));
-  });
-
-  it("looks again as often as it is told", () => {
-    const { repeat } = start(true);
-
-    expect(repeat).toHaveBeenCalledExactlyOnceWith(
-      expect.any(Function),
-      EVERY_MS,
-    );
-  });
-
   it("says nothing while the scheme stays the same", () => {
-    const { sendMessage, tick } = start(true);
+    const sendMessage = vi.fn().mockResolvedValue(1);
+    const reporter = new SchemeReporter({ sendMessage });
 
-    tick();
+    reporter.report("dark");
+    reporter.report("dark");
 
     expect(sendMessage).toHaveBeenCalledTimes(1);
   });
 
   it("reports again when the scheme changes", () => {
-    const { query, sendMessage, tick } = start(false);
+    const sendMessage = vi.fn().mockResolvedValue(1);
+    const reporter = new SchemeReporter({ sendMessage });
 
-    query.matches = true;
-    tick();
+    reporter.report("light");
+    reporter.report("dark");
 
     expect(sendMessage).toHaveBeenLastCalledWith(report("dark"));
   });
@@ -71,10 +40,10 @@ describe("SchemeReporter", () => {
       .fn()
       .mockRejectedValueOnce(new Error("No receiver"))
       .mockResolvedValue(undefined);
-    const { tick } = start(true, sendMessage);
+    const reporter = new SchemeReporter({ sendMessage });
 
     await vi.waitFor(() => {
-      tick();
+      reporter.report("dark");
       expect(sendMessage).toHaveBeenCalledTimes(2);
     });
     expect(sendMessage).toHaveBeenLastCalledWith(report("dark"));

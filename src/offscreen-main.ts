@@ -2,10 +2,11 @@
 import { DARK_SCHEME_QUERY } from "./colour-scheme";
 import { OFFSCREEN_CONFIG } from "./offscreen-config";
 import { SchemeReporter } from "./scheme-reporter";
+import { SchemeWatcher } from "./scheme-watcher";
 
-new SchemeReporter(
+new SchemeWatcher(
   window.matchMedia(DARK_SCHEME_QUERY),
-  chrome.runtime,
+  new SchemeReporter(chrome.runtime),
   (work, everyMs) => {
     window.setInterval(work, everyMs);
   },

@@ -2,7 +2,7 @@ import { MERGEABLE_WINDOW_TYPES } from "../src/browser-windows";
 import { OFFSCREEN_PAGE } from "../src/scheme-document";
 import { UNKNOWN_SCHEME } from "../src/scheme-state";
 import { ToolbarIcon } from "../src/toolbar-icon";
-import { IDLE_TITLE } from "../src/toolbar-indicator";
+import { IDLE_TITLE } from "../src/merge-looks";
 import build from "../scripts/build.mjs?raw";
 import offscreenPage from "../static/offscreen.html?raw";
 import manifest from "../static/manifest.json";

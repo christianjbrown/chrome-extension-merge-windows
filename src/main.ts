@@ -2,6 +2,7 @@
 import { ClickScheme } from "./click-scheme";
 import { ChromeMergeSteps } from "./chrome-merge-steps";
 import { MergeController } from "./merge-controller";
+import { MERGE_LOOKS } from "./merge-looks";
 import { TabOrderPlanner } from "./merge-planner";
 import { OFFSCREEN_PAGE, SchemeDocument } from "./scheme-document";
 import { SchemeListener } from "./scheme-listener";
@@ -18,7 +19,7 @@ const controller = new MergeController(
     chrome.windows,
     new TabOrderPlanner(new ChromeMergeSteps(chrome.tabs, chrome.tabGroups)),
   ),
-  new ToolbarIndicator(chrome.action),
+  new ToolbarIndicator(chrome.action, MERGE_LOOKS),
 );
 const toolbarScheme = new ToolbarScheme(
   new SchemeStore(chrome.storage.local, UNKNOWN_SCHEME),

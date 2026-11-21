@@ -1,4 +1,3 @@
-import { errorMessage } from "./error-message";
 import type { MergeIndicator } from "./merge-indicator";
 import type { Merger } from "./window-merger";
 
@@ -30,7 +29,7 @@ export class MergeController {
       await this.merger.mergeInto(tab.windowId);
       await this.indicator.showIdle();
     } catch (error) {
-      await this.indicator.showError(errorMessage(error));
+      await this.indicator.showError(error);
     } finally {
       this.busy = false;
     }

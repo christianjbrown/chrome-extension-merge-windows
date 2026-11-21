@@ -1,5 +1,4 @@
-import { isColourScheme } from "./colour-scheme";
-import type { SchemeState } from "./scheme-state";
+import { readSchemeState, type SchemeState } from "./scheme-state";
 
 export interface StorageArea {
   get(key: string): Promise<Record<string, unknown>>;
@@ -19,14 +18,7 @@ export class SchemeStore {
 
   async load(): Promise<SchemeState> {
     const stored = (await this.area.get(STORAGE_KEY))[STORAGE_KEY];
-    if (typeof stored !== "object" || stored === null) {
-      return this.unknown;
-    }
-    const { device, chrome } = stored as Record<string, unknown>;
-    return {
-      device: isColourScheme(device) ? device : this.unknown.device,
-      chrome: isColourScheme(chrome) ? chrome : null,
-    };
+    return readSchemeState(stored, this.unknown);
   }
 
   save(state: SchemeState): Promise<void> {

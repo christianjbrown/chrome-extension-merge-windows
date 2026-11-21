@@ -31,7 +31,7 @@ describe("MergeController", () => {
 
       await subject.merge({ windowId: 5 });
 
-      expect(indicator.showError).toHaveBeenCalledWith("nope");
+      expect(indicator.showError).toHaveBeenCalledWith(failure);
       expect(indicator.showIdle).not.toHaveBeenCalled();
     },
   );
@@ -43,7 +43,7 @@ describe("MergeController", () => {
 
     expect(mergeInto).not.toHaveBeenCalled();
     expect(indicator.showError).toHaveBeenCalledWith(
-      "This window cannot take other windows' tabs",
+      new Error("This window cannot take other windows' tabs"),
     );
   });
 

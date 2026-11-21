@@ -1,4 +1,4 @@
-import { DARK, type ColourScheme } from "./colour-scheme";
+import { DARK, isColourScheme, type ColourScheme } from "./colour-scheme";
 
 // What is known about the colour of Chrome's toolbar.
 //
@@ -32,6 +32,22 @@ export function afterTab(state: SchemeState, tab: ColourScheme): SchemeState {
     return { ...state, chrome: tab };
   }
   return { ...state, chrome: state.chrome === tab ? tab : null };
+}
+
+// Reads a saved state back, taking anything that is not a colour scheme for
+// unknown rather than trusting it.
+export function readSchemeState(
+  stored: unknown,
+  unknown: SchemeState,
+): SchemeState {
+  if (typeof stored !== "object" || stored === null) {
+    return unknown;
+  }
+  const { device, chrome } = stored as Record<string, unknown>;
+  return {
+    device: isColourScheme(device) ? device : unknown.device,
+    chrome: isColourScheme(chrome) ? chrome : null,
+  };
 }
 
 // How each report moves the state on, and which scheme the toolbar is in.
