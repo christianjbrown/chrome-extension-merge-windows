@@ -5,8 +5,8 @@ export interface Look {
   title: string;
 }
 
-// The looks the button takes on: waiting for a click, and a merge that failed.
-export interface MergeLooks {
-  idle: Look;
-  failed(error: unknown): Look;
+// How the button looks once a merge has failed, which depends on what went
+// wrong.
+export interface FailureLook {
+  look(error: unknown): Look;
 }

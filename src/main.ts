@@ -4,7 +4,7 @@ import { GroupMoveBuilder } from "./group-move";
 import { GroupPlanning } from "./group-planning";
 import { LooseTabsPlanning } from "./loose-tabs-planning";
 import { MergeController } from "./merge-controller";
-import { MERGE_LOOKS } from "./merge-looks";
+import { FailedLook, IDLE_LOOK } from "./merge-looks";
 import { OrdinaryTargets } from "./ordinary-targets";
 import { PinBuilder } from "./pin";
 import { PinPlanning } from "./pin-planning";
@@ -40,7 +40,9 @@ const controller = new MergeController(
     new OrdinaryTargets(),
     new TabOrderPlanner(planning),
   ),
-  new ToolbarIndicator(chrome.action, MERGE_LOOKS),
+  new ToolbarIndicator(chrome.action),
+  IDLE_LOOK,
+  new FailedLook(),
 );
 const toolbarScheme = new ToolbarScheme(
   new SchemeStore(chrome.storage.local, UNKNOWN_SCHEME),

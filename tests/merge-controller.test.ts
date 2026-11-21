@@ -1,14 +1,21 @@
 import { MergeController } from "../src/merge-controller";
 
+const idle = { badge: "", colour: "grey", title: "idle" };
+
+const failed = {
+  look: (error: unknown) => ({
+    badge: "!",
+    colour: "red",
+    title: String(error),
+  }),
+};
+
 function controller(mergeInto = vi.fn().mockResolvedValue(undefined)) {
-  const indicator = {
-    showIdle: vi.fn().mockResolvedValue(undefined),
-    showError: vi.fn().mockResolvedValue(undefined),
-  };
+  const indicator = { show: vi.fn().mockResolvedValue(undefined) };
   return {
     mergeInto,
     indicator,
-    controller: new MergeController({ mergeInto }, indicator),
+    controller: new MergeController({ mergeInto }, indicator, idle, failed),
   };
 }
 
@@ -19,7 +26,7 @@ describe("MergeController", () => {
     await subject.merge({ windowId: 5 });
 
     expect(mergeInto).toHaveBeenCalledWith(5);
-    expect(indicator.showIdle).toHaveBeenCalled();
+    expect(indicator.show).toHaveBeenCalledExactlyOnceWith(idle);
   });
 
   it.each([new Error("nope"), "nope"])(
@@ -31,8 +38,9 @@ describe("MergeController", () => {
 
       await subject.merge({ windowId: 5 });
 
-      expect(indicator.showError).toHaveBeenCalledWith(failure);
-      expect(indicator.showIdle).not.toHaveBeenCalled();
+      expect(indicator.show).toHaveBeenCalledExactlyOnceWith(
+        failed.look(failure),
+      );
     },
   );
 
@@ -42,8 +50,8 @@ describe("MergeController", () => {
     await subject.merge({});
 
     expect(mergeInto).not.toHaveBeenCalled();
-    expect(indicator.showError).toHaveBeenCalledWith(
-      new Error("This window cannot take other windows' tabs"),
+    expect(indicator.show).toHaveBeenCalledExactlyOnceWith(
+      failed.look(new Error("This window cannot take other windows' tabs")),
     );
   });
 

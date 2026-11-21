@@ -72,7 +72,7 @@ How it fits together, all in `src`:
 - **`main.ts`** wires the pieces to Chrome. Nothing else touches `chrome` directly.
 - **`scheme-document.ts`, `scheme-reporter.ts` and `scheme-listener.ts`** keep the button's colour in step with Chrome: a hidden offscreen document checks light or dark once a second and the service worker swaps the icon.
 - **`scheme-state.ts`, `scheme-rules.ts`, `scheme-store.ts`, `toolbar-scheme.ts`, `tab-scheme.ts` and `click-scheme.ts`** sort out which report to believe: the device's, or the one a clicked tab gives for Chrome's own setting, which wins and is kept in `chrome.storage.local`. `serial-queue.ts` takes the reports one at a time.
-- **`merge-controller.ts`** handles a click: merge, then clear the badge or show what went wrong.
+- **`merge-controller.ts`** handles a click: merge, then clear the badge or show what went wrong. `main.ts` hands it both looks from `merge-looks.ts`, and `toolbar-indicator.ts` puts whichever it picks on the button.
 - **`window-merger.ts`** fetches every normal and popup window and runs the plan for the ones that can give their tabs.
 - **`ordinary-targets.ts`** decides which those are: only an ordinary window takes tabs, and incognito stays with incognito.
 - **`tab-order-planner.ts`** works out the moves by asking each kind of planning `main.ts` lists. `window-moves-planning.ts` splits each window into runs (`tab-runs.ts`) and hands them to `loose-tabs-planning.ts` and `group-planning.ts`, so loose tabs go in one go and groups go whole. Then `pin-planning.ts` re-pins the pinned ones. Each kind decides for itself whether it has anything to do.
