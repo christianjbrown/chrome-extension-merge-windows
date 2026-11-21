@@ -1,4 +1,5 @@
 import { isColourScheme, type ColourScheme } from "./colour-scheme";
+import { isRecord } from "./is-record";
 
 // Who a runtime message is for, and which kind it is.
 export const BACKGROUND_TARGET = "background";
@@ -16,9 +17,6 @@ export const schemeMessage = (scheme: ColourScheme): SchemeMessage => ({
   type: SCHEME_MESSAGE_TYPE,
   scheme,
 });
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null;
 
 export function isSchemeMessage(message: unknown): message is SchemeMessage {
   return (

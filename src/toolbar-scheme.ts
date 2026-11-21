@@ -1,5 +1,6 @@
 import type { ColourScheme } from "./colour-scheme";
-import type { SchemePolicy, SchemeState } from "./scheme-state";
+import type { SchemePolicy } from "./scheme-policy";
+import type { SchemeState } from "./scheme-state";
 
 export interface SchemeMemory {
   load(): Promise<SchemeState>;

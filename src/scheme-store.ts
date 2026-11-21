@@ -1,4 +1,5 @@
-import { readSchemeState, type SchemeState } from "./scheme-state";
+import { readSchemeState } from "./read-scheme-state";
+import type { SchemeState } from "./scheme-state";
 
 export interface StorageArea {
   get(key: string): Promise<Record<string, unknown>>;
