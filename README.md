@@ -71,13 +71,14 @@ How it fits together, all in `src`:
 
 - **`main.ts`** wires the pieces to Chrome. Nothing else touches `chrome` directly.
 - **`scheme-document.ts`, `scheme-reporter.ts` and `scheme-listener.ts`** keep the button's colour in step with Chrome: a hidden offscreen document checks light or dark once a second and the service worker swaps the icon.
-- **`scheme-state.ts`, `scheme-store.ts`, `toolbar-scheme.ts`, `tab-scheme.ts` and `click-scheme.ts`** sort out which report to believe: the device's, or the one a clicked tab gives for Chrome's own setting, which wins and is kept in `chrome.storage.local`.
+- **`scheme-state.ts`, `scheme-rules.ts`, `scheme-store.ts`, `toolbar-scheme.ts`, `tab-scheme.ts` and `click-scheme.ts`** sort out which report to believe: the device's, or the one a clicked tab gives for Chrome's own setting, which wins and is kept in `chrome.storage.local`.
 - **`merge-controller.ts`** handles a click: merge, then clear the badge or show what went wrong.
-- **`window-merger.ts`** fetches every normal and popup window, picks out the ones to merge, and runs the plan.
-- **`merge-planner.ts`** works out the moves: runs of loose tabs in one go, groups whole, then re-pin the pinned ones.
-- **`chrome-merge-steps.ts`** turns those moves into `chrome.tabs` and `chrome.tabGroups` calls.
+- **`window-merger.ts`** fetches every normal and popup window and runs the plan for the ones that can give their tabs.
+- **`ordinary-targets.ts`** decides which those are: only an ordinary window takes tabs, and incognito stays with incognito.
+- **`tab-order-planner.ts`** works out the moves: runs of loose tabs in one go, groups whole, then re-pin the pinned ones.
+- **`step-registry.ts`** makes each move with the builder `main.ts` registered for its kind, and **`chrome-merge-steps.ts`** holds the steps themselves, as `chrome.tabs` and `chrome.tabGroups` calls.
 
-Every class gets its collaborators through its constructor, behind an interface, so each one is tested on its own with fakes.
+Every class gets its collaborators through its constructor, behind an interface in a small file of its own (`merger.ts`, `scheme-memory.ts` and friends), so each one is tested on its own with fakes.
 
 ## Licence 📄
 

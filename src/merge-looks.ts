@@ -1,17 +1,5 @@
 import { errorMessage } from "./error-message";
-
-// What the toolbar button shows.
-export interface Look {
-  badge: string;
-  colour: string;
-  title: string;
-}
-
-// The looks the button takes on: waiting for a click, and a merge that failed.
-export interface MergeLooks {
-  idle: Look;
-  failed(error: unknown): Look;
-}
+import type { MergeLooks } from "./looks";
 
 const RED = "#dc2626";
 const GREY = "#5a5a60";

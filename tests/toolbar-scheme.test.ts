@@ -1,4 +1,5 @@
-import { SCHEME_POLICY, type SchemeState } from "../src/scheme-state";
+import { SCHEME_POLICY } from "../src/scheme-rules";
+import type { SchemeState } from "../src/scheme-state";
 import { ToolbarScheme } from "../src/toolbar-scheme";
 
 function fakes(start: SchemeState = { device: "dark", chrome: null }) {

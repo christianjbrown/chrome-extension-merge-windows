@@ -1,5 +1,5 @@
 import type { MergeIndicator } from "./merge-indicator";
-import type { Merger } from "./window-merger";
+import type { Merger } from "./merger";
 
 export interface ClickedTab {
   windowId?: number | undefined;

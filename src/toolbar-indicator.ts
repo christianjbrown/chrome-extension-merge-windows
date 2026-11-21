@@ -1,4 +1,4 @@
-import type { Look, MergeLooks } from "./merge-looks";
+import type { Look, MergeLooks } from "./looks";
 import type { MergeIndicator } from "./merge-indicator";
 
 export interface ToolbarAction {

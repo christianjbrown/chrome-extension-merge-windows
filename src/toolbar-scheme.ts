@@ -1,18 +1,14 @@
 import type { ColourScheme } from "./colour-scheme";
-import type { SchemePolicy, SchemeState } from "./scheme-state";
-
-export interface SchemeMemory {
-  load(): Promise<SchemeState>;
-  save(state: SchemeState): Promise<void>;
-}
-
-export interface SchemeIcon {
-  show(scheme: ColourScheme): Promise<void>;
-}
+import type { DeviceScheme } from "./device-scheme";
+import type { SchemeIcon } from "./scheme-icon";
+import type { SchemeMemory } from "./scheme-memory";
+import type { SchemePolicy } from "./scheme-policy";
+import type { SchemeState } from "./scheme-state";
+import type { TabSchemeSink } from "./tab-scheme-sink";
 
 // Works out which colour scheme the toolbar is in from the two things that
 // report one, and keeps the button's icon in step.
-export class ToolbarScheme {
+export class ToolbarScheme implements DeviceScheme, TabSchemeSink {
   private last: Promise<void> = Promise.resolve();
 
   constructor(

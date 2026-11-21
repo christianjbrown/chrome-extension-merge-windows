@@ -1,9 +1,5 @@
-import type { ColourScheme } from "./colour-scheme";
+import type { DeviceScheme } from "./device-scheme";
 import { isSchemeMessage } from "./scheme-message";
-
-export interface DeviceScheme {
-  deviceIs(scheme: ColourScheme): Promise<void>;
-}
 
 // Whoever sent a runtime message: only the id matters here.
 export interface MessageSender {

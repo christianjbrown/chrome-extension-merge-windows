@@ -11,23 +11,31 @@ function merger(windows: BrowserWindow[]) {
     },
   });
   const source = { getAll: vi.fn().mockResolvedValue(windows) };
+  // Every window but the target gives its tabs.
+  const targets = {
+    donorsFor: vi.fn((all: BrowserWindow[], targetId: number) =>
+      all.filter((window) => window.id !== targetId),
+    ),
+  };
   const planner = {
     plan: vi.fn((donors: BrowserWindow[]) =>
       donors.map((donor) => step(`window ${String(donor.id)}`)),
     ),
   };
-  return { ran, source, planner, merger: new WindowMerger(source, planner) };
+  return {
+    ran,
+    source,
+    targets,
+    planner,
+    merger: new WindowMerger(source, targets, planner),
+  };
 }
 
-const normal = (id: number, incognito = false) => ({
-  id,
-  type: "normal",
-  incognito,
-});
+const window = (id: number) => ({ id, type: "normal", incognito: false });
 
 describe("WindowMerger", () => {
   it("asks for every normal and popup window with its tabs", async () => {
-    const { source, merger: subject } = merger([normal(1)]);
+    const { source, merger: subject } = merger([window(1)]);
 
     await subject.mergeInto(1);
 
@@ -37,39 +45,23 @@ describe("WindowMerger", () => {
     });
   });
 
-  it("runs the plan for every other window, in order, into the clicked one", async () => {
-    const { ran, merger: subject } = merger([
-      normal(2),
-      normal(1),
-      { id: 3, type: "popup", incognito: false },
-    ]);
+  it("runs the plan for the donors, in order, into the clicked one", async () => {
+    const all = [window(2), window(1), window(3)];
+    const { ran, targets, merger: subject } = merger(all);
 
     await subject.mergeInto(1);
 
+    expect(targets.donorsFor).toHaveBeenCalledWith(all, 1);
     expect(ran).toEqual(["window 2 into 1", "window 3 into 1"]);
   });
 
-  it("keeps incognito windows and ordinary ones apart", async () => {
-    const { ran, merger: subject } = merger([
-      normal(1, true),
-      normal(2),
-      normal(3, true),
-    ]);
+  it("plans nothing when the window cannot take tabs", async () => {
+    const { targets, planner, merger: subject } = merger([window(1)]);
+    targets.donorsFor.mockImplementation(() => {
+      throw new Error("No");
+    });
 
-    await subject.mergeInto(1);
-
-    expect(ran).toEqual(["window 3 into 1"]);
+    await expect(subject.mergeInto(1)).rejects.toThrow("No");
+    expect(planner.plan).not.toHaveBeenCalled();
   });
-
-  it.each([[[{ id: 1, type: "popup", incognito: false }]], [[normal(2)]]])(
-    "refuses to merge into a popup or a window it cannot find",
-    async (all) => {
-      const { planner, merger: subject } = merger(all);
-
-      await expect(subject.mergeInto(1)).rejects.toThrow(
-        "Merge from an ordinary window, not a popup",
-      );
-      expect(planner.plan).not.toHaveBeenCalled();
-    },
-  );
 });
