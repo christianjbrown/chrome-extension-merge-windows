@@ -4,6 +4,7 @@ import { GroupMove, Pin, TabsMove } from "./chrome-merge-steps";
 import { MergeController } from "./merge-controller";
 import { MERGE_LOOKS } from "./merge-looks";
 import { TabOrderPlanner } from "./merge-planner";
+import { OrdinaryTargets } from "./ordinary-targets";
 import { OFFSCREEN_PAGE, SchemeDocument } from "./scheme-document";
 import { SchemeListener } from "./scheme-listener";
 import { SCHEME_POLICY, UNKNOWN_SCHEME } from "./scheme-state";
@@ -18,6 +19,7 @@ import { WindowMerger } from "./window-merger";
 const controller = new MergeController(
   new WindowMerger(
     chrome.windows,
+    new OrdinaryTargets(),
     new TabOrderPlanner(
       new StepRegistry({
         moveTabs: ({ tabIds }) => new TabsMove(chrome.tabs, tabIds),
