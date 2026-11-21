@@ -8,7 +8,7 @@ Run `npm run package` and upload the `extension.zip` it makes. Bump `version` in
 
 ## Store listing
 
-- **Name:** Christian's Merge Windows (read from the manifest)
+- **Name:** Christian's Merge Windows and Tabs (read from the manifest)
 - **Summary:** One click pulls the tabs from every other window, minimised and popup ones too, into the window you are in. (read from the manifest)
 - **Category:** Make Chrome Yours > Functionality & UI
 - **Language:** English (United Kingdom)
