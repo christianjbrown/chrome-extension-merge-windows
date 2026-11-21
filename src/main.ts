@@ -10,6 +10,7 @@ import { SchemeListener } from "./scheme-listener";
 import { SCHEME_POLICY } from "./scheme-rules";
 import { UNKNOWN_SCHEME } from "./scheme-state";
 import { SchemeStore } from "./scheme-store";
+import { SerialQueue } from "./serial-queue";
 import { TabOrderPlanner, type PlanSteps } from "./tab-order-planner";
 import { TabScheme } from "./tab-scheme";
 import { TabsMoveBuilder } from "./tabs-move";
@@ -36,6 +37,7 @@ const toolbarScheme = new ToolbarScheme(
   new SchemeStore(chrome.storage.local, UNKNOWN_SCHEME),
   new ToolbarIcon(chrome.action),
   SCHEME_POLICY,
+  new SerialQueue(),
 );
 const clickScheme = new ClickScheme(
   new TabScheme(chrome.scripting),
