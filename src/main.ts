@@ -5,6 +5,7 @@ import { MergeController } from "./merge-controller";
 import { TabOrderPlanner } from "./merge-planner";
 import { SchemeDocument } from "./scheme-document";
 import { SchemeListener } from "./scheme-listener";
+import { SCHEME_POLICY, UNKNOWN_SCHEME } from "./scheme-state";
 import { SchemeStore } from "./scheme-store";
 import { TabScheme } from "./tab-scheme";
 import { ToolbarIcon } from "./toolbar-icon";
@@ -20,8 +21,9 @@ const controller = new MergeController(
   new ToolbarIndicator(chrome.action),
 );
 const toolbarScheme = new ToolbarScheme(
-  new SchemeStore(chrome.storage.local),
+  new SchemeStore(chrome.storage.local, UNKNOWN_SCHEME),
   new ToolbarIcon(chrome.action),
+  SCHEME_POLICY,
 );
 const clickScheme = new ClickScheme(
   new TabScheme(chrome.scripting),
