@@ -1,33 +1,34 @@
 // The service worker: builds the object graph and connects it to Chrome's events.
 import { ClickScheme } from "./click-scheme";
-import { GroupMove, Pin, TabsMove } from "./chrome-merge-steps";
+import { GroupMoveBuilder } from "./group-move";
 import { MergeController } from "./merge-controller";
 import { MERGE_LOOKS } from "./merge-looks";
 import { OrdinaryTargets } from "./ordinary-targets";
+import { PinBuilder } from "./pin";
 import { OFFSCREEN_PAGE, SchemeDocument } from "./scheme-document";
 import { SchemeListener } from "./scheme-listener";
 import { SCHEME_POLICY } from "./scheme-rules";
 import { UNKNOWN_SCHEME } from "./scheme-state";
 import { SchemeStore } from "./scheme-store";
-import { StepRegistry } from "./step-registry";
-import { TabOrderPlanner } from "./tab-order-planner";
+import { TabOrderPlanner, type PlanSteps } from "./tab-order-planner";
 import { TabScheme } from "./tab-scheme";
+import { TabsMoveBuilder } from "./tabs-move";
 import { ToolbarIcon } from "./toolbar-icon";
 import { ToolbarIndicator } from "./toolbar-indicator";
 import { ToolbarScheme } from "./toolbar-scheme";
 import { WindowMerger } from "./window-merger";
 
+const planSteps = {
+  moveTabs: new TabsMoveBuilder(chrome.tabs),
+  moveGroup: new GroupMoveBuilder(chrome.tabGroups),
+  pin: new PinBuilder(chrome.tabs),
+} satisfies PlanSteps;
+
 const controller = new MergeController(
   new WindowMerger(
     chrome.windows,
     new OrdinaryTargets(),
-    new TabOrderPlanner(
-      new StepRegistry({
-        moveTabs: ({ tabIds }) => new TabsMove(chrome.tabs, tabIds),
-        moveGroup: ({ groupId }) => new GroupMove(chrome.tabGroups, groupId),
-        pin: ({ tabIds }) => new Pin(chrome.tabs, tabIds),
-      }),
-    ),
+    new TabOrderPlanner(planSteps),
   ),
   new ToolbarIndicator(chrome.action, MERGE_LOOKS),
 );
