@@ -20,8 +20,8 @@ You need [Node.js](https://nodejs.org) 22 or newer, and Chrome 126 or newer.
 1. Grab the code and build it:
 
    ```bash
-   git clone https://github.com/christianjbrown/chrome-extension-merge-windows.git
-   cd chrome-extension-merge-windows
+   git clone https://github.com/christianjbrown/chrome-extension-merge-windows-and-tabs.git
+   cd chrome-extension-merge-windows-and-tabs
    npm ci
    npm run build
    ```
